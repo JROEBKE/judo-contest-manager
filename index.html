@@ -133,7 +133,12 @@
   The whole tournament is stored in one JSON-compatible object and persisted in localStorage.
   This allows to implement it as a single static HTML file without any backend dependency and central data storage.
 */
-let data = JSON.parse(localStorage.getItem('turnier')) || {teams:[], matches:[]};
+let data = JSON.parse(localStorage.getItem('turnier')) || {
+    version: 1,
+    teams: [],
+    matches: []
+};
+
 const save = () => localStorage.setItem('turnier', JSON.stringify(data));
 
 /** Scrolls to a main section from the right-side navigation. */
@@ -151,11 +156,18 @@ function resetTournament(){
   if(!confirmed) return;
 
   localStorage.removeItem('turnier');
-  data = {teams:[], matches:[]};
+  data = {
+    version: 1,
+    teams: [],
+    matches: []
+  };
 
   const upload = document.getElementById('uploadFile');
   if(upload) upload.value = '';
-
+  if (obj.version !== 1) {
+    alert("Dieses Backup stammt aus einer nicht unterstützten Version.");
+    return;
+  }
   renderTeams();
   renderMatches();
   calculateRanking();
@@ -164,6 +176,7 @@ function resetTournament(){
 /** Initializes default teams and clears existing matches. Teams are editable immediately. */
 function initTeams(){
   const n = parseInt(document.getElementById('teamCount').value, 10);
+  data.version = 1;
   data.teams = [];
   data.matches = [];
   for(let i=1;i<=n;i++) data.teams.push({name:'Mannschaft ' + i, saved:false});
@@ -409,6 +422,10 @@ function appendBlocksAsMatches(day, blocks){
 /** Generates the tournament schedule according to the configured team count. */
 function generateMatches(){
   const teams = getTeamNames();
+  if (new Set(teams).size !== teams.length) {
+    alert("Mannschaftsnamen müssen eindeutig sein.");
+    return;
+  }
   if(teams.length < 2){ alert('Bitte mindestens zwei Mannschaften initialisieren.'); return; }
 
   data.matches = [];
@@ -686,10 +703,21 @@ function loadFile(event){
 
   const reader = new FileReader();
   reader.onload = e => {
-    data = JSON.parse(e.target.result);
-    save();
-    renderTeams();
-    renderMatches();
+    try {
+      const obj = JSON.parse(e.target.result);
+
+      if(!obj.teams || !obj.matches){
+          throw new Error("Ungültiges Backup");
+      }
+
+      data = obj;
+      save();
+      renderTeams();
+      renderMatches();
+
+    } catch(e){
+        alert("Ungültige Datei.");
+    }
   };
   reader.readAsText(file);
 }
