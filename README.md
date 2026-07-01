@@ -1,0 +1,1 @@
+# judo-contest-manager
