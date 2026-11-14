@@ -21,6 +21,8 @@ Anschließend `http://localhost:8000` im Browser aufrufen. Ein Webserver ist erf
 5. Über die Navigation zwischen Mannschaften, Wettkampftagen und Rangliste wechseln oder die Bereiche ein- und ausklappen.
 6. Über **Live Views** die Begegnungsübersicht oder das Live Ranking in einem separaten Tab öffnen. Die Ansichten aktualisieren sich, sobald ein neuer Turnierstand gespeichert wird. Die Begegnungsansicht zeigt pro Matte nur die aktuelle und die nächste Begegnung; Wettkampftag 2 erscheint erst, wenn alle Begegnungen von Tag 1 abgeschlossen sind.
 
+Mannschaftsnamen können auch nach dem Erstellen der Begegnungen über **Edit** geändert werden. Vorhandene Paarungen und Ergebnisse bleiben dabei erhalten; der neue Name wird in den Begegnungen und der Rangliste angezeigt.
+
 Der Turnierstand wird lokal im Browser gespeichert. **Backup speichern** lädt eine JSON-Datei herunter; über **Datei hochladen** kann ein Backup wiederhergestellt werden. Ältere Turnierdaten werden beim Laden auf das aktuelle Datenformat migriert; für sie gilt die bisherige Standardbelegung mit zwei Matten.
 
 ## Offlinebetrieb

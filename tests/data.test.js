@@ -108,6 +108,31 @@ test('persists mat count changes for future schedules', () => {
   assert.equal(JSON.parse(harness.savedValue).matCount, 4);
 });
 
+test('renames a team in existing matches without changing their schedule or results', () => {
+  const fixture = JSON.parse(fs.readFileSync(
+    path.join(root, 'testfiles', '01_direkter_vergleich_2er_entscheidet.json'),
+    'utf8'
+  ));
+  const harness = loadUi(JSON.stringify(fixture));
+  const {context, data} = harness;
+  const team = data.teams[0];
+  const previousName = team.name;
+  const originalMatches = JSON.parse(JSON.stringify(data.matches));
+
+  assert.equal(context.updateTeamName(team, 'Neue Mannschaft'), true);
+  assert.equal(team.name, 'Neue Mannschaft');
+  data.matches.forEach((match, index) => {
+    const expected = originalMatches[index];
+    if(expected.a === previousName) expected.a = 'Neue Mannschaft';
+    if(expected.b === previousName) expected.b = 'Neue Mannschaft';
+    assert.deepEqual(JSON.parse(JSON.stringify(match)), expected);
+  });
+
+  assert.equal(context.updateTeamName(team, data.teams[1].name), false);
+  assert.equal(team.name, 'Neue Mannschaft');
+  assert.match(harness.alerts.at(-1), /eindeutig/i);
+});
+
 test('rejects invalid results and unsupported data versions', () => {
   const fixture = JSON.parse(fs.readFileSync(
     path.join(root, 'testfiles', '01_direkter_vergleich_2er_entscheidet.json'),

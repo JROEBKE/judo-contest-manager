@@ -215,9 +215,13 @@ function renderTeams(){
         team.saved = false;
       } else {
         const value = tr.querySelector('input').value.trim();
-        if(!value){ alert('Bitte einen Mannschaftsnamen eingeben.'); return; }
-        team.name = value;
+        const previousName = team.name;
+        if(!updateTeamName(team, value)) return;
         team.saved = true;
+        if(team.name !== previousName){
+          updateMatchTeamNamesInView();
+          calculateRanking();
+        }
       }
       renderTeams();
       save();
@@ -228,6 +232,43 @@ function renderTeams(){
   });
 
   c.appendChild(table);
+}
+
+/** Changes a team's name while keeping all scheduled matches and results intact. */
+function updateTeamName(team, value){
+  const name = value.trim();
+  if(!name){
+    alert('Bitte einen Mannschaftsnamen eingeben.');
+    return false;
+  }
+  if(data.teams.some(other => other !== team && other.name.trim() === name)){
+    alert('Mannschaftsnamen müssen eindeutig sein.');
+    return false;
+  }
+
+  const previousName = team.name;
+  team.name = name;
+  if(previousName !== name){
+    data.matches.forEach(match => {
+      if(match.a === previousName) match.a = name;
+      if(match.b === previousName) match.b = name;
+    });
+  }
+  return true;
+}
+
+/** Updates only the team-name cells, preserving any unsaved result inputs. */
+function updateMatchTeamNamesInView(){
+  [1,2].forEach(day => {
+    const rows = document.querySelectorAll(`#matchesDay${day} tbody tr`);
+    const matches = data.matches.filter(match => match.day === day);
+    matches.forEach((match, index) => {
+      const row = rows[index];
+      if(!row) return;
+      row.children[1].textContent = match.a;
+      row.children[2].textContent = match.b;
+    });
+  });
 }
 
 /** Returns all non-empty team names. Names are used even while a row is still in edit mode. */

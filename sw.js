@@ -1,4 +1,4 @@
-const CACHE_NAME = 'judo-turnier-v10';
+const CACHE_NAME = 'judo-turnier-v11';
 const ASSETS_TO_CACHE = [
   './index.html',
   './live.html',
