@@ -1,4 +1,37 @@
-# judo-contest-manager
-This simple application is created to manage a judo contest between different teams (up to 10). If less than 5 teams compete than there will be a first and a second. If 5 or more teams compete there is only a single round.
+# Judo Contest Manager
 
-Baseline assumptions are two different days for competition and using two mats.
+Eine statische Web-App zur Verwaltung eines Judo-Mannschaftsturniers mit bis zu zehn Mannschaften und zwei Matten. Es wird kein Build-Schritt benötigt.
+
+## Starten
+
+Das Projektverzeichnis über einen lokalen Webserver öffnen, zum Beispiel:
+
+```sh
+python3 -m http.server 8000
+```
+
+Anschließend `http://localhost:8000` im Browser aufrufen. Ein Webserver ist erforderlich, damit der Service Worker funktioniert; `localhost` gilt hierfür als sicherer Kontext.
+
+## Turnier verwalten
+
+1. Mannschaftsanzahl auswählen, Mannschaften anlegen und Namen speichern.
+2. Optional einen Turniertitel eingeben.
+3. **Begegnungen erstellen** auswählen. Bei zwei bis vier Mannschaften wird eine Hin- und Rückrunde erzeugt; ab fünf Mannschaften eine einfache Runde, verteilt auf zwei Wettkampftage.
+4. Ergebnisse eintragen und speichern. Die Rangliste berücksichtigt gespeicherte Ergebnisse.
+5. Über die Navigation zwischen Mannschaften, Wettkampftagen und Rangliste wechseln oder die Bereiche ein- und ausklappen.
+
+Der Turnierstand wird lokal im Browser gespeichert. **Backup speichern** lädt eine JSON-Datei herunter; über **Datei hochladen** kann ein Backup wiederhergestellt werden. Version-1-Daten werden beim Laden auf das aktuelle Datenformat migriert.
+
+## Offlinebetrieb
+
+Nach einem Online-Aufruf cached der Service Worker die App-Dateien und Icons. Danach kann die App auch ohne Netzwerkverbindung geöffnet werden. Turnierdaten werden nicht im Cache, sondern im lokalen Browser-Speicher abgelegt; für eine Übertragung auf ein anderes Gerät ein Backup verwenden.
+
+## Tests
+
+Voraussetzung ist Node.js 18 oder neuer mit integriertem Test-Runner. Tests ohne zusätzliche Pakete ausführen:
+
+```sh
+node --test tests/*.test.js
+```
+
+Die Tests decken Ranglisten-Fixtures, Spielplangenerierung, Datenmigration und -validierung, Backup-Import, Offline-Fallback und Navigation ab.

@@ -14,23 +14,32 @@ function loadFile(event){
   if(!file) return;
 
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onerror = () => {
+    console.error('Backup-Datei konnte nicht gelesen werden:', reader.error);
+    alert('Die Backup-Datei konnte nicht gelesen werden.');
+  };
+  reader.onload = event => {
+    let imported;
     try {
-      const obj = JSON.parse(e.target.result);
-
-      if(!obj.teams || !obj.matches){
-        throw new Error('Ungültiges Backup');
-      }
-
-      obj.version = obj.version || 1;
-      data = obj;
-      save();
-      document.getElementById('tournamentTitle').value = data.tournamentTitle || '';
-      renderTeams();
-      renderMatches();
-    } catch(e){
-      alert('Ungültige Datei.');
+      imported = JSON.parse(event.target.result);
+    } catch(error) {
+      console.error('Backup-Datei enthält kein gültiges JSON:', error);
+      alert('Die Backup-Datei enthält kein gültiges JSON.');
+      return;
     }
+
+    try {
+      data = normalizeTournamentData(imported);
+    } catch(error) {
+      console.error('Backup-Datei enthält ungültige Turnierdaten:', error);
+      alert(`Ungültiges Backup: ${error.message}`);
+      return;
+    }
+
+    save();
+    document.getElementById('tournamentTitle').value = data.tournamentTitle;
+    renderTeams();
+    renderMatches();
   };
   reader.readAsText(file);
 }

@@ -53,9 +53,11 @@
   .side-stack{position:fixed;right:20px;top:50px;width:175px;display:flex;flex-direction:column;gap:14px;z-index:10}
   .side-panel{background:#fff;border:1px solid #ccc;border-radius:6px;padding:10px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
   .side-panel strong{display:block;margin-bottom:6px;color:#1f3f73}
-  .side-panel a{display:block;margin:7px 0;color:#0645ad;text-decoration:underline;cursor:pointer}
-  .side-panel button,.upload-label{display:block;width:100%;box-sizing:border-box;margin:6px 0;padding:7px 8px;min-height:34px;text-align:left;font:inherit;background:#f4f4f4;border:1px solid #999;border-radius:3px;color:#111;cursor:pointer}
-  .side-panel button:hover,.upload-label:hover{background:#e9e9e9}
+  .side-panel button:not(.nav-button),.upload-label{display:block;width:100%;box-sizing:border-box;margin:6px 0;padding:7px 8px;min-height:34px;text-align:left;font:inherit;background:#f4f4f4;border:1px solid #999;border-radius:3px;color:#111;cursor:pointer}
+  .side-panel button:not(.nav-button):hover,.upload-label:hover{background:#e9e9e9}
+  .side-panel .nav-button{display:block;width:100%;margin:7px 0;padding:0;min-height:0;text-align:left;font:inherit;background:transparent;border:0;color:#0645ad;text-decoration:underline;cursor:pointer}
+  .side-panel .nav-button:hover{background:transparent;color:#052f75}
+  .side-panel button:focus-visible,.upload-label:focus-visible{outline:2px solid #2f5597;outline-offset:2px}
   .side-panel input[type=file]{display:none}
   .danger-button{border-color:#b00020!important;color:#b00020!important;background:#fff5f5!important}
   .danger-button:hover{background:#ffe6e6!important}
@@ -80,10 +82,10 @@
 <div class="side-stack">
   <div class="side-panel nav">
     <strong>Navigation</strong>
-    <a onclick="toggleSection('teamsSection')">Mannschaften</a>
-    <a onclick="toggleSection('day1')">Wettkampftag 1</a>
-    <a onclick="toggleSection('day2')">Wettkampftag 2</a>
-    <a onclick="toggleSection('rankingSection')">Rangliste</a>
+    <button type="button" class="nav-button" aria-controls="teamsSection" onclick="toggleSection('teamsSection')">Mannschaften</button>
+    <button type="button" class="nav-button" aria-controls="day1" onclick="toggleSection('day1')">Wettkampftag 1</button>
+    <button type="button" class="nav-button" aria-controls="day2" onclick="toggleSection('day2')">Wettkampftag 2</button>
+    <button type="button" class="nav-button" aria-controls="rankingSection" onclick="toggleSection('rankingSection')">Rangliste</button>
   </div>
 
   <div class="side-panel print-panel">

@@ -198,7 +198,7 @@ function generateMatches(){
 
   data.matches = [];
 
-  if(teams.length <= 5){
+  if(teams.length < 5){
     // First leg on day 1, reverse leg on day 2.
     const rounds = generateRoundRobinRounds(teams);
     const firstLeg = [];
