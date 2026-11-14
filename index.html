@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Judo Turnier Manager</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2f5597">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Judo Contest Manager</title>
 <style>
   /* Reserve space for the fixed right-side control panels. */
   body{font-family:Arial,Helvetica,sans-serif;padding:20px 230px 20px 20px;line-height:1.35;background:#fafafa;color:#222}
@@ -130,5 +133,14 @@
 <script src="ranking.js"></script>
 <script src="print.js"></script>
 <script src="backup.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('Service Worker registered succesfully:', reg.scope))
+      .catch(err => console.log('Service Worker registry failed:', err));
+  });
+}
+</script>
 </body>
 </html>
