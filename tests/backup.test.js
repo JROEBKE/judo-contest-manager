@@ -94,3 +94,32 @@ test('reports malformed backup JSON', () => {
   assert.match(harness.alerts[0], /kein gültiges JSON/i);
   assert.equal(harness.errors.length, 1);
 });
+
+test('builds a dated backup filename with the tournament title', () => {
+  const harness = createBackupHarness(null);
+  vm.runInContext('data.tournamentTitle = "Bezirkspokal 2026"', harness.context);
+
+  assert.equal(
+    harness.context.getBackupFileName(new Date(2026, 0, 5)),
+    '20260105-Bezirkspokal-2026-backup.json'
+  );
+});
+
+test('uses JudoContest when no usable tournament title exists', () => {
+  const harness = createBackupHarness(null);
+  const date = new Date(2026, 10, 14);
+
+  assert.equal(harness.context.getBackupFileName(date), '20261114-JudoContest-backup.json');
+  vm.runInContext('data.tournamentTitle = " /:*? "', harness.context);
+  assert.equal(harness.context.getBackupFileName(date), '20261114-JudoContest-backup.json');
+});
+
+test('removes filename-unsafe characters from tournament titles', () => {
+  const harness = createBackupHarness(null);
+  vm.runInContext('data.tournamentTitle = "Final: Runde 1/2"', harness.context);
+
+  assert.equal(
+    harness.context.getBackupFileName(new Date(2026, 0, 5)),
+    '20260105-Final-Runde-12-backup.json'
+  );
+});
