@@ -227,7 +227,7 @@ function generateMatches(){
   save();
 }
 
-/** Renders matches grouped by day. Internal block numbers only affect row separators. */
+/** Renders matches grouped by day. */
 function renderMatches(){
   [1,2].forEach(day => {
     const c = document.getElementById('matchesDay' + day);
@@ -236,13 +236,13 @@ function renderMatches(){
     if(!list.length) return;
 
     const table = document.createElement('table');
+    table.className = 'matches-table';
     table.innerHTML = '<thead><tr><th>Matte</th><th>Mannschaft 1</th><th>Mannschaft 2</th><th>Kampfergebnis</th><th>Unterbewertung</th><th>Aktion</th></tr></thead><tbody></tbody>';
     const tbody = table.querySelector('tbody');
 
-    list.forEach((m, localIndex) => {
+    list.forEach(m => {
       const index = data.matches.indexOf(m);
       const tr = document.createElement('tr');
-      if(localIndex === 0 || list[localIndex-1].block !== m.block) tr.classList.add('block-row-start');
 
       tr.innerHTML = `
         <td>Matte ${m.mat}</td>

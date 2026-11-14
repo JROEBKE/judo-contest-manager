@@ -26,14 +26,21 @@
   #teamTable td:first-child{padding-left:14px;text-align:left}
   #teamTable input{text-align:left}
   input[type=number]{width:58px}
+  #rankingTable{table-layout:fixed}
+  #rankingTable th:first-child,#rankingTable td:first-child{width:5%}
+  #rankingTable th:nth-child(n+3),#rankingTable td:nth-child(n+3){width:8%}
+  #rankingTable th,#rankingTable td{padding:4px 3px}
+  #rankingTable th{overflow-wrap:anywhere}
+  #rankingTable td:nth-child(2){text-align:left;overflow-wrap:anywhere}
+  .matches-table th:nth-child(1),.matches-table td:nth-child(1){width:80px}
+  .matches-table th:nth-child(4),.matches-table td:nth-child(4),
+  .matches-table th:nth-child(5),.matches-table td:nth-child(5){width:145px}
+  .matches-table th:nth-child(6),.matches-table td:nth-child(6){width:95px}
   button,select{margin:4px;padding:5px 8px}
 
   /* Collapsible major sections. */
-  .section-line{border-top:3px solid #222;margin:30px 0 0 0;padding-top:18px;background:#fff;border-radius:4px}
+  .section-line{margin:30px 0 0 0;padding-top:18px;background:#fff;border-radius:4px}
   .section-line>summary{margin:0 0 16px 0;padding:10px 12px;border-left:6px solid #2f5597;background:#eef3fb;border-radius:4px;font-size:22px;color:#1f3f73;cursor:pointer}
-
-  /* Internal match blocks are visualized by a stronger row border, but the block number is not displayed. */
-  .block-row-start td{border-top:3px solid #777}
 
   /* Result and tie-break highlighting. */
   .direct{background:#fff3cd!important}
@@ -131,8 +138,8 @@
   <table id="rankingTable">
     <thead>
       <tr>
-        <th>Rang</th><th>Mannschaft</th><th>Begegnungen</th><th>Gewonnen:Verloren</th>
-        <th>Δ Begegnungen</th><th>Kämpfe</th><th>Δ Kämpfe</th><th>Unterbewertung</th><th>Δ Unterbewertung</th>
+        <th>Rang</th><th>Mannschaft</th><th>Begegnungen</th><th>Gewonnen:<br>Verloren</th>
+        <th>Δ<br>Begegnungen</th><th>Kämpfe</th><th>Δ Kämpfe</th><th>Unter-<br>bewertung</th><th>Δ Unter-<br>bewertung</th>
       </tr>
     </thead>
     <tbody></tbody>

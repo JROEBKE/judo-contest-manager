@@ -1,13 +1,14 @@
-/** Removes the action column from match tables before printing. */
-function stripActionColumnForPrint(html){
-  const wrapper = document.createElement('div');
-  wrapper.innerHTML = html;
-  wrapper.querySelectorAll('table').forEach(table => {
-    table.querySelectorAll('tr').forEach(row => {
-      if(row.children.length > 0) row.children[row.children.length - 1].remove();
-    });
+/** Replaces match inputs with their current values and removes the action column. */
+function stripActionColumnForPrint(table){
+  const printableTable = table.cloneNode(true);
+  const inputs = table.querySelectorAll('input');
+  printableTable.querySelectorAll('input').forEach((input, index) => {
+    input.replaceWith(document.createTextNode(inputs[index].value));
   });
-  return wrapper.innerHTML;
+  printableTable.querySelectorAll('tr').forEach(row => {
+    if(row.children.length > 0) row.children[row.children.length - 1].remove();
+  });
+  return printableTable.outerHTML;
 }
 
 /** Prepares isolated print content and opens the browser print dialog. */
@@ -38,7 +39,7 @@ function printDay(day){
   const dayEl = document.getElementById('day' + day);
   const table = dayEl && dayEl.querySelector('table');
   if(!table){ alert('Für diesen Wettkampftag gibt es noch keine Begegnungen.'); return; }
-  printHtml(getPrintTitle('Wettkampftag ' + day), stripActionColumnForPrint(table.outerHTML));
+  printHtml(getPrintTitle('Wettkampftag ' + day), stripActionColumnForPrint(table));
 }
 
 /** Prints only the ranking section. */
