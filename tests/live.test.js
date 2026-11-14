@@ -86,6 +86,7 @@ test('shows the next unsaved matches in order on each mat and updates after a re
   assert.equal(harness.elements.get('liveTitle').textContent, 'Begegnungen – Testturnier');
   assert.match(board, /Matte 1[\s\S]*Aktuell[\s\S]*Mannschaft A[\s\S]*Nächste Begegnung[\s\S]*Mannschaft A/);
   assert.match(board, /Matte 2[\s\S]*Aktuell[\s\S]*Mannschaft C[\s\S]*Nächste Begegnung[\s\S]*Mannschaft B/);
+  assert.doesNotMatch(board, /Wettkampftag \d+ · Begegnung \d+/);
   assert.equal((board.match(/class="match-slot/g) || []).length, 4);
   assert.match(fs.readFileSync(path.join(root, 'live.html'), 'utf8'), /Mannschaftsaufstellungen abgeben/);
 
@@ -100,7 +101,7 @@ test('shows the next unsaved matches in order on each mat and updates after a re
   harness.update(tournament);
   board = harness.elements.get('matchesBoard').innerHTML;
   assert.match(board, /Matte 1[\s\S]*Keine offene Begegnung[\s\S]*Ende von Wettkampftag 1/);
-  assert.doesNotMatch(board, /Mannschaft A <span aria-label="gegen">–<\/span> Mannschaft D/);
+  assert.doesNotMatch(board, /Mannschaft A[\s\S]*Mannschaft D/);
   assert.match(board, /Matte 2[\s\S]*Aktuell[\s\S]*Mannschaft B[\s\S]*Ende von Wettkampftag 1/);
 
   tournament.matches[3].saved = true;

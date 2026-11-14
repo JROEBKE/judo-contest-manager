@@ -87,8 +87,11 @@ function showLiveError(error){
 
 function formatMatch(match){
   return `
-    <div class="team-pair">${escapeHtml(match.a)} <span aria-label="gegen">–</span> ${escapeHtml(match.b)}</div>
-    <div class="match-meta">Wettkampftag ${match.day} · Begegnung ${match.block}</div>`;
+    <div class="team-pair">
+      <span class="team-name">${escapeHtml(match.a)}</span>
+      <span class="versus" aria-label="gegen">–</span>
+      <span class="team-name">${escapeHtml(match.b)}</span>
+    </div>`;
 }
 
 function renderMatchSlot(match, label, emptyMessage, className){
