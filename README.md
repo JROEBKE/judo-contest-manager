@@ -1,6 +1,6 @@
 # Judo Contest Manager
 
-Eine statische Web-App zur Verwaltung eines Judo-Mannschaftsturniers mit bis zu zehn Mannschaften und zwei Matten. Es wird kein Build-Schritt benötigt.
+Eine statische Web-App zur Verwaltung eines Judo-Mannschaftsturniers mit bis zu zehn Mannschaften und ein bis vier Matten (Standard: zwei). Es wird kein Build-Schritt benötigt.
 
 ## Starten
 
@@ -14,13 +14,13 @@ Anschließend `http://localhost:8000` im Browser aufrufen. Ein Webserver ist erf
 
 ## Turnier verwalten
 
-1. Mannschaftsanzahl auswählen, Mannschaften anlegen und Namen speichern.
+1. Mannschafts- und Mattenanzahl auswählen, Mannschaften anlegen und Namen speichern. Die Mattenanzahl wird für neu erstellte Begegnungen verwendet.
 2. Optional einen Turniertitel eingeben.
 3. **Begegnungen erstellen** auswählen. Bei zwei bis vier Mannschaften wird eine Hin- und Rückrunde erzeugt; ab fünf Mannschaften eine einfache Runde, verteilt auf zwei Wettkampftage.
 4. Ergebnisse eintragen und speichern. Die Rangliste berücksichtigt gespeicherte Ergebnisse.
 5. Über die Navigation zwischen Mannschaften, Wettkampftagen und Rangliste wechseln oder die Bereiche ein- und ausklappen.
 
-Der Turnierstand wird lokal im Browser gespeichert. **Backup speichern** lädt eine JSON-Datei herunter; über **Datei hochladen** kann ein Backup wiederhergestellt werden. Version-1-Daten werden beim Laden auf das aktuelle Datenformat migriert.
+Der Turnierstand wird lokal im Browser gespeichert. **Backup speichern** lädt eine JSON-Datei herunter; über **Datei hochladen** kann ein Backup wiederhergestellt werden. Ältere Turnierdaten werden beim Laden auf das aktuelle Datenformat migriert; für sie gilt die bisherige Standardbelegung mit zwei Matten.
 
 ## Offlinebetrieb
 

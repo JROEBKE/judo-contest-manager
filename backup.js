@@ -55,6 +55,7 @@ function loadFile(event){
 
     save();
     document.getElementById('tournamentTitle').value = data.tournamentTitle;
+    document.getElementById('matCount').value = String(data.matCount);
     renderTeams();
     renderMatches();
   };

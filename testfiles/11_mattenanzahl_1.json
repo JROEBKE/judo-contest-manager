@@ -1,0 +1,23 @@
+{
+  "version": 3,
+  "tournamentTitle": "Testturnier 2026",
+  "matCount": 1,
+  "teams": [
+    {"name": "Mannschaft A", "saved": true},
+    {"name": "Mannschaft B", "saved": true}
+  ],
+  "matches": [
+    {
+      "a": "Mannschaft A",
+      "b": "Mannschaft B",
+      "day": 1,
+      "block": 1,
+      "mat": 1,
+      "fightsA": 3,
+      "fightsB": 2,
+      "scoreA": 30,
+      "scoreB": 20,
+      "saved": true
+    }
+  ]
+}

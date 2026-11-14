@@ -117,73 +117,64 @@ function pairKey(m){
   return [m.a,m.b].sort().join('||');
 }
 
-/** Builds two-mat blocks. A valid two-match block must contain four distinct teams. */
-function buildBlocks(matches){
+/** Builds time blocks with no team scheduled on more than one mat at a time. */
+function buildBlocks(matches, matCount){
+  if(!Number.isInteger(matCount) || matCount < 1 || matCount > 4){
+    throw new RangeError('Die Mattenanzahl muss zwischen 1 und 4 liegen.');
+  }
   const remaining = matches.slice();
   const blocks = [];
   let previousTeams = new Set();
 
   while(remaining.length){
-    let bestPair = null;
-    let bestScore = Infinity;
+    let bestBlock = [];
+    let bestOverlap = Infinity;
 
-    // Prefer two matches that can run in parallel and share few teams with the previous block.
-    for(let i=0;i<remaining.length;i++){
-      for(let j=i+1;j<remaining.length;j++){
-        const first = remaining[i];
-        const second = remaining[j];
-        const teams = [first.a, first.b, second.a, second.b];
-        if(new Set(teams).size !== 4) continue;
+    function findBestBlock(startIndex, block, usedTeams, overlap){
+      if(block.length > bestBlock.length ||
+         (block.length === bestBlock.length && overlap < bestOverlap)){
+        bestBlock = block;
+        bestOverlap = overlap;
+      }
+      if(block.length === matCount) return;
 
-        let overlap = 0;
-        teams.forEach(t => { if(previousTeams.has(t)) overlap++; });
-        if(overlap < bestScore){ bestScore = overlap; bestPair = [i,j]; }
+      for(let i=startIndex;i<remaining.length;i++){
+        const match = remaining[i];
+        if(usedTeams.has(match.a) || usedTeams.has(match.b)) continue;
+
+        const nextUsedTeams = new Set(usedTeams);
+        nextUsedTeams.add(match.a);
+        nextUsedTeams.add(match.b);
+        const nextOverlap = overlap +
+          Number(previousTeams.has(match.a)) + Number(previousTeams.has(match.b));
+        findBestBlock(i + 1, [...block, match], nextUsedTeams, nextOverlap);
       }
     }
 
-    if(bestPair){
-      const [i,j] = bestPair;
-      const first = remaining[i];
-      const second = remaining[j];
-      blocks.push([first, second]);
-      remaining.splice(j,1); // Remove higher index first.
-      remaining.splice(i,1);
-      previousTeams = new Set([first.a, first.b, second.a, second.b]);
-    } else {
-      // Fallback: single-match block when no valid parallel pair exists.
-      let bestIndex = 0;
-      let bestSingleScore = Infinity;
-      for(let i=0;i<remaining.length;i++){
-        const m = remaining[i];
-        let overlap = 0;
-        [m.a,m.b].forEach(t => { if(previousTeams.has(t)) overlap++; });
-        if(overlap < bestSingleScore){ bestSingleScore = overlap; bestIndex = i; }
-      }
-      const single = remaining.splice(bestIndex,1)[0];
-      blocks.push([single]);
-      previousTeams = new Set([single.a,single.b]);
+    findBestBlock(0, [], new Set(), 0);
+    blocks.push(bestBlock);
+    const blockMatches = new Set(bestBlock);
+    for(let i=remaining.length-1;i>=0;i--){
+      if(blockMatches.has(remaining[i])) remaining.splice(i,1);
     }
+    previousTeams = new Set(bestBlock.flatMap(match => [match.a, match.b]));
   }
 
   return blocks;
 }
 
-/** Converts internal blocks into stored match objects and balances single matches across mats. */
-function appendBlocksAsMatches(day, blocks){
-  let mat1Count = 0;
-  let mat2Count = 0;
-
+/** Converts internal blocks into stored matches and balances usage across configured mats. */
+function appendBlocksAsMatches(day, blocks, matCount){
+  const matCounts = Array(matCount).fill(0);
   blocks.forEach((block, blockIndex) => {
-    if(block.length === 2){
-      data.matches.push(createMatch(block[0].a, block[0].b, day, blockIndex + 1, 1));
-      data.matches.push(createMatch(block[1].a, block[1].b, day, blockIndex + 1, 2));
-      mat1Count++;
-      mat2Count++;
-    } else {
-      const mat = mat1Count <= mat2Count ? 1 : 2;
-      data.matches.push(createMatch(block[0].a, block[0].b, day, blockIndex + 1, mat));
-      if(mat === 1) mat1Count++; else mat2Count++;
-    }
+    const mats = matCounts
+      .map((count, index) => ({mat:index + 1, count}))
+      .sort((a, b) => a.count - b.count || a.mat - b.mat);
+    block.forEach((match, index) => {
+      const mat = mats[index].mat;
+      data.matches.push(createMatch(match.a, match.b, day, blockIndex + 1, mat));
+      matCounts[mat - 1]++;
+    });
   });
 }
 
@@ -197,6 +188,7 @@ function generateMatches(){
   if(teams.length < 2){ alert('Bitte mindestens zwei Mannschaften initialisieren.'); return; }
 
   data.matches = [];
+  const matCount = data.matCount;
 
   if(teams.length < 5){
     // First leg on day 1, reverse leg on day 2.
@@ -209,16 +201,16 @@ function generateMatches(){
       round.forEach(m => secondLeg.push({a:m.b, b:m.a}));
     });
 
-    appendBlocksAsMatches(1, buildBlocks(firstLeg));
-    appendBlocksAsMatches(2, buildBlocks(secondLeg));
+    appendBlocksAsMatches(1, buildBlocks(firstLeg, matCount), matCount);
+    appendBlocksAsMatches(2, buildBlocks(secondLeg, matCount), matCount);
   } else {
     // One complete round-robin distributed across two days.
     const allPairs = generateAllPairs(teams);
     const targetDay1Matches = Math.floor(allPairs.length / 2);
     const split = selectBalancedDayMatches(allPairs, teams, targetDay1Matches);
 
-    appendBlocksAsMatches(1, buildBlocks(split.day1));
-    appendBlocksAsMatches(2, buildBlocks(split.day2));
+    appendBlocksAsMatches(1, buildBlocks(split.day1, matCount), matCount);
+    appendBlocksAsMatches(2, buildBlocks(split.day2, matCount), matCount);
   }
 
   renderMatches();

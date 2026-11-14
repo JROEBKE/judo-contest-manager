@@ -1,0 +1,65 @@
+{
+  "version": 3,
+  "tournamentTitle": "Testturnier 2026",
+  "matCount": 4,
+  "teams": [
+    {"name": "Mannschaft A", "saved": true},
+    {"name": "Mannschaft B", "saved": true},
+    {"name": "Mannschaft C", "saved": true},
+    {"name": "Mannschaft D", "saved": true},
+    {"name": "Mannschaft E", "saved": true},
+    {"name": "Mannschaft F", "saved": true},
+    {"name": "Mannschaft G", "saved": true},
+    {"name": "Mannschaft H", "saved": true}
+  ],
+  "matches": [
+    {
+      "a": "Mannschaft A",
+      "b": "Mannschaft B",
+      "day": 1,
+      "block": 1,
+      "mat": 1,
+      "fightsA": 3,
+      "fightsB": 2,
+      "scoreA": 30,
+      "scoreB": 20,
+      "saved": true
+    },
+    {
+      "a": "Mannschaft C",
+      "b": "Mannschaft D",
+      "day": 1,
+      "block": 1,
+      "mat": 2,
+      "fightsA": 4,
+      "fightsB": 1,
+      "scoreA": 40,
+      "scoreB": 10,
+      "saved": true
+    },
+    {
+      "a": "Mannschaft E",
+      "b": "Mannschaft F",
+      "day": 1,
+      "block": 1,
+      "mat": 3,
+      "fightsA": 2,
+      "fightsB": 3,
+      "scoreA": 20,
+      "scoreB": 30,
+      "saved": true
+    },
+    {
+      "a": "Mannschaft G",
+      "b": "Mannschaft H",
+      "day": 1,
+      "block": 1,
+      "mat": 4,
+      "fightsA": 1,
+      "fightsB": 4,
+      "scoreA": 10,
+      "scoreB": 40,
+      "saved": true
+    }
+  ]
+}

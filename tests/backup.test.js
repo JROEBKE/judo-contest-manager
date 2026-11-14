@@ -10,6 +10,7 @@ function createBackupHarness(fileContents){
   const alerts = [];
   const errors = [];
   const titleInput = {value:''};
+  const matCountInput = {value:''};
   let stored = null;
   let renderCount = 0;
   class FileReaderStub {
@@ -24,7 +25,10 @@ function createBackupHarness(fileContents){
       removeItem() {}
     },
     window: {addEventListener() {}},
-    document: {getElementById: id => id === 'tournamentTitle' ? titleInput : null},
+    document: {
+      getElementById: id => id === 'tournamentTitle' ? titleInput :
+        id === 'matCount' ? matCountInput : null
+    },
     FileReader: FileReaderStub,
     alert: message => alerts.push(message),
     console: {error: (...args) => errors.push(args)}
@@ -40,6 +44,7 @@ function createBackupHarness(fileContents){
     alerts,
     errors,
     titleInput,
+    matCountInput,
     get stored(){ return stored; },
     get renderCount(){ return renderCount; }
   };
@@ -60,13 +65,45 @@ test('imports and migrates a valid legacy backup', () => {
   upload(harness);
 
   const imported = vm.runInContext('data', harness.context);
-  assert.equal(imported.version, 2);
+  assert.equal(imported.version, 3);
+  assert.equal(imported.matCount, 2);
   assert.equal(imported.tournamentTitle, 'Testturnier 2026');
   assert.equal(harness.titleInput.value, 'Testturnier 2026');
+  assert.equal(harness.matCountInput.value, '2');
   assert.equal(harness.renderCount, 2);
-  assert.equal(JSON.parse(harness.stored).version, 2);
+  assert.equal(JSON.parse(harness.stored).version, 3);
   assert.deepEqual(harness.alerts, []);
 });
+
+for(const matCount of [1, 3, 4]){
+  test(`imports a backup configured for ${matCount} mats`, () => {
+    const fixtureFile = {
+      1:'11_mattenanzahl_1.json',
+      3:'12_mattenanzahl_3.json',
+      4:'13_mattenanzahl_4.json'
+    }[matCount];
+    const fixture = JSON.parse(fs.readFileSync(
+      path.join(root, 'testfiles', fixtureFile),
+      'utf8'
+    ));
+    const harness = createBackupHarness(JSON.stringify(fixture));
+
+    upload(harness);
+
+    const imported = vm.runInContext('data', harness.context);
+    assert.equal(imported.matCount, matCount);
+    assert.equal(harness.matCountInput.value, String(matCount));
+    assert.equal(imported.matches.length, matCount);
+    assert.equal(
+      new Set(imported.matches.flatMap(match => [match.a, match.b])).size,
+      matCount * 2
+    );
+    assert.deepEqual(Array.from(imported.matches, match => match.mat), Array.from(
+      {length:matCount},
+      (_, index) => index + 1
+    ));
+  });
+}
 
 test('rejects invalid backup data without replacing the current tournament', () => {
   const fixture = JSON.parse(fs.readFileSync(

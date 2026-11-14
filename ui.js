@@ -4,14 +4,14 @@
   The whole tournament is stored in one JSON-compatible object and persisted in localStorage.
   This allows to implement it as a single static HTML file without any backend dependency and central data storage.
 */
-const CURRENT_DATA_VERSION = 2;
+const CURRENT_DATA_VERSION = 3;
 
 function isRecord(value){
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
 function createEmptyTournament(){
-  return {version:CURRENT_DATA_VERSION, tournamentTitle:'', teams:[], matches:[]};
+  return {version:CURRENT_DATA_VERSION, tournamentTitle:'', matCount:2, teams:[], matches:[]};
 }
 
 /** Migrates supported old data and validates the tournament structure before use. */
@@ -19,15 +19,16 @@ function normalizeTournamentData(value){
   if(!isRecord(value)) throw new Error('Turnierdaten müssen ein JSON-Objekt sein.');
 
   const sourceVersion = value.version === undefined ? 1 : value.version;
-  if(sourceVersion !== 1 && sourceVersion !== CURRENT_DATA_VERSION){
+  if(![1,2,CURRENT_DATA_VERSION].includes(sourceVersion)){
     throw new Error('Diese Turnierdaten-Version wird nicht unterstützt.');
   }
 
-  const normalized = sourceVersion === 1
+  const normalized = sourceVersion < CURRENT_DATA_VERSION
     ? {
       ...value,
       version:CURRENT_DATA_VERSION,
-      tournamentTitle:value.tournamentTitle === undefined ? '' : value.tournamentTitle
+      tournamentTitle:value.tournamentTitle === undefined ? '' : value.tournamentTitle,
+      matCount:2
     }
     : value;
 
@@ -35,6 +36,9 @@ function normalizeTournamentData(value){
   if(normalized.teams.length > 10) throw new Error('Ein Turnier darf höchstens 10 Mannschaften enthalten.');
   if(!Array.isArray(normalized.matches)) throw new Error('Die Begegnungsliste ist ungültig.');
   if(typeof normalized.tournamentTitle !== 'string') throw new Error('Der Turniertitel muss Text sein.');
+  if(!Number.isInteger(normalized.matCount) || normalized.matCount < 1 || normalized.matCount > 4){
+    throw new Error('Die Mattenanzahl muss eine ganze Zahl zwischen 1 und 4 sein.');
+  }
 
   const teams = normalized.teams.map((team, index) => {
     if(!isRecord(team) || typeof team.name !== 'string' || !team.name.trim()){
@@ -49,6 +53,7 @@ function normalizeTournamentData(value){
   const teamNames = new Set(teams.map(team => team.name));
   if(teamNames.size !== teams.length) throw new Error('Mannschaftsnamen müssen eindeutig sein.');
 
+  const maxMat = sourceVersion < CURRENT_DATA_VERSION ? 2 : 4;
   const matches = normalized.matches.map((match, index) => {
     if(!isRecord(match)) throw new Error(`Begegnung ${index + 1} ist ungültig.`);
     if(typeof match.a !== 'string' || typeof match.b !== 'string' ||
@@ -56,7 +61,7 @@ function normalizeTournamentData(value){
       throw new Error(`Die Mannschaften in Begegnung ${index + 1} sind ungültig.`);
     }
     if(![1,2].includes(match.day) || !Number.isInteger(match.block) || match.block < 1 ||
-       ![1,2].includes(match.mat)){
+       !Number.isInteger(match.mat) || match.mat < 1 || match.mat > maxMat){
       throw new Error(`Tag, Block oder Matte von Begegnung ${index + 1} sind ungültig.`);
     }
     if(!Number.isInteger(match.fightsA) || match.fightsA < 0 || match.fightsA > 9 ||
@@ -119,6 +124,18 @@ function updateTournamentTitle(title){
   save();
 }
 
+/** Updates the mat count used when the next schedule is generated. */
+function updateMatCount(value){
+  const matCount = Number(value);
+  if(!Number.isInteger(matCount) || matCount < 1 || matCount > 4){
+    alert('Die Mattenanzahl muss zwischen 1 und 4 liegen.');
+    document.getElementById('matCount').value = String(data.matCount);
+    return;
+  }
+  data.matCount = matCount;
+  save();
+}
+
 /** Toggles one main section and closes the other main sections. */
 function toggleSection(id){
   const sectionIds = ['teamsSection','day1','day2','rankingSection'];
@@ -143,6 +160,7 @@ function resetTournament(){
   localStorage.removeItem('turnier');
   data = createEmptyTournament();
   document.getElementById('tournamentTitle').value = '';
+  document.getElementById('matCount').value = String(data.matCount);
   document.getElementById('teamsSection').open = true;
   document.getElementById('day1').open = false;
   document.getElementById('day2').open = false;
@@ -218,6 +236,7 @@ function formatNumber(n){ return Number.isInteger(n) ? String(n) : String(n).rep
 
 function initializeApp(){
   document.getElementById('tournamentTitle').value = data.tournamentTitle || '';
+  document.getElementById('matCount').value = String(data.matCount);
   renderTeams();
   renderMatches();
   calculateRanking();

@@ -43,7 +43,8 @@ test('migrates versionless tournament data to the current schema', () => {
   const {context} = loadUi(null);
   const migrated = context.normalizeTournamentData(legacy);
 
-  assert.equal(migrated.version, 2);
+  assert.equal(migrated.version, 3);
+  assert.equal(migrated.matCount, 2);
   assert.equal(migrated.tournamentTitle, '');
   assert.equal(migrated.teams.length, 4);
   assert.equal(migrated.matches.length, 6);
@@ -58,8 +59,53 @@ test('persists version-1 localStorage migration', () => {
 
   const {data, savedValue} = loadUi(JSON.stringify(legacy));
 
-  assert.equal(data.version, 2);
-  assert.equal(JSON.parse(savedValue).version, 2);
+  assert.equal(data.version, 3);
+  assert.equal(data.matCount, 2);
+  assert.equal(JSON.parse(savedValue).version, 3);
+});
+
+test('migrates version-2 data to the current schema with two mats', () => {
+  const legacy = JSON.parse(fs.readFileSync(
+    path.join(root, 'testfiles', '01_direkter_vergleich_2er_entscheidet.json'),
+    'utf8'
+  ));
+  legacy.version = 2;
+
+  const {context} = loadUi(null);
+  const migrated = context.normalizeTournamentData(legacy);
+
+  assert.equal(migrated.version, 3);
+  assert.equal(migrated.matCount, 2);
+});
+
+test('validates mat count while preserving existing matches after a setting change', () => {
+  const fixture = JSON.parse(fs.readFileSync(
+    path.join(root, 'testfiles', '01_direkter_vergleich_2er_entscheidet.json'),
+    'utf8'
+  ));
+  const {context} = loadUi(null);
+
+  assert.throws(
+    () => context.normalizeTournamentData({...fixture, version:3, matCount:5}),
+    /Mattenanzahl/
+  );
+  const normalized = context.normalizeTournamentData({
+    ...fixture,
+    version:3,
+    matCount:1,
+    matches:fixture.matches.map(match => ({...match, mat:4}))
+  });
+  assert.equal(normalized.matCount, 1);
+  assert.equal(normalized.matches[0].mat, 4);
+});
+
+test('persists mat count changes for future schedules', () => {
+  const harness = loadUi(null);
+
+  harness.context.updateMatCount('4');
+
+  assert.equal(vm.runInContext('data.matCount', harness.context), 4);
+  assert.equal(JSON.parse(harness.savedValue).matCount, 4);
 });
 
 test('rejects invalid results and unsupported data versions', () => {
@@ -83,8 +129,9 @@ test('reports malformed localStorage data and starts with an empty tournament', 
   const {data, alerts, errors} = loadUi('{invalid json');
 
   assert.deepEqual(JSON.parse(JSON.stringify(data)), {
-    version:2,
+    version:3,
     tournamentTitle:'',
+    matCount:2,
     teams:[],
     matches:[]
   });
