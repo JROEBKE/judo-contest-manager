@@ -13,9 +13,18 @@ function stripActionColumnForPrint(html){
 /** Prepares isolated print content and opens the browser print dialog. */
 function printHtml(title, html){
   const printArea = document.getElementById('printArea');
-  printArea.innerHTML = `<h1>${title}</h1>${html}`;
+  printArea.innerHTML = html;
+  const heading = document.createElement('h1');
+  heading.textContent = title;
+  printArea.prepend(heading);
   document.body.classList.add('printing');
   window.print();
+}
+
+/** Adds the optional tournament title to the printed section heading. */
+function getPrintTitle(section){
+  const tournamentTitle = (data.tournamentTitle || '').trim();
+  return tournamentTitle ? section + ' - ' + tournamentTitle : section;
 }
 
 /** Cleans up the temporary print area after printing. */
@@ -29,11 +38,11 @@ function printDay(day){
   const dayEl = document.getElementById('day' + day);
   const table = dayEl && dayEl.querySelector('table');
   if(!table){ alert('Für diesen Wettkampftag gibt es noch keine Begegnungen.'); return; }
-  printHtml('Wettkampftag ' + day, stripActionColumnForPrint(table.outerHTML));
+  printHtml(getPrintTitle('Wettkampftag ' + day), stripActionColumnForPrint(table.outerHTML));
 }
 
 /** Prints only the ranking section. */
 function printRanking(){
   const rankEl = document.getElementById('rankingSection');
-  printHtml('Rangliste', rankEl.innerHTML);
+  printHtml(getPrintTitle('Rangliste'), rankEl.querySelector('table').outerHTML);
 }

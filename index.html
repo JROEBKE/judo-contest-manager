@@ -13,6 +13,9 @@
 
   /* Highlight the main title and all chapter headings for better usability during a live tournament. */
   h1{margin-top:0;font-size:30px;letter-spacing:.2px}
+  .title-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+  .title-row h1{margin-bottom:0}
+  #tournamentTitle{width:360px;max-width:100%;margin-left:auto}
   h3{margin-top:22px;font-size:18px;color:#333}
 
   /* Shared table and form styling. */
@@ -20,6 +23,8 @@
   th,td{border:1px solid #ccc;padding:5px;text-align:center}
   th{background:#f5f5f5}
   input{width:500px;height: 40px; box-sizing:border-box}
+  #teamTable td:first-child{padding-left:14px;text-align:left}
+  #teamTable input{text-align:left}
   input[type=number]{width:58px}
   button,select{margin:4px;padding:5px 8px}
 
@@ -93,7 +98,10 @@
 <!-- Temporary print target. Only this element is visible during printing. -->
 <div id="printArea"></div>
 
-<h1>Judo Turnier Manager</h1>
+<div class="title-row">
+  <h1>Judo Turnier Manager</h1>
+  <input id="tournamentTitle" type="text" placeholder="Turniertitel" oninput="updateTournamentTitle(this.value)">
+</div>
 
 <details id="teamsSection" class="section-line" open>
   <summary>Mannschaften</summary>

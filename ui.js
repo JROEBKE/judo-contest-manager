@@ -14,6 +14,12 @@ function scrollToId(id){
   if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
+/** Updates and persists the tournament title. */
+function updateTournamentTitle(title){
+  data.tournamentTitle = title;
+  save();
+}
+
 /** Toggles one main section and closes the other main sections. */
 function toggleSection(id){
   const sectionIds = ['teamsSection','day1','day2','rankingSection'];
@@ -37,6 +43,7 @@ function resetTournament(){
 
   localStorage.removeItem('turnier');
   data = {version:1, teams:[], matches:[]};
+  document.getElementById('tournamentTitle').value = '';
   document.getElementById('teamsSection').open = true;
   document.getElementById('day1').open = false;
   document.getElementById('day2').open = false;
@@ -111,6 +118,7 @@ function escapeHtml(str){
 function formatNumber(n){ return Number.isInteger(n) ? String(n) : String(n).replace('.', ','); }
 
 function initializeApp(){
+  document.getElementById('tournamentTitle').value = data.tournamentTitle || '';
   renderTeams();
   renderMatches();
   calculateRanking();

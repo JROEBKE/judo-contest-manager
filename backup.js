@@ -25,6 +25,7 @@ function loadFile(event){
       obj.version = obj.version || 1;
       data = obj;
       save();
+      document.getElementById('tournamentTitle').value = data.tournamentTitle || '';
       renderTeams();
       renderMatches();
     } catch(e){
