@@ -8,22 +8,26 @@ const source = fs.readFileSync(path.resolve(__dirname, '..', 'sw.js'), 'utf8');
 
 function loadServiceWorker({match = async () => null, fetchRequest = async () => { throw new Error('offline'); }} = {}){
   const listeners = {};
+  let skipWaitingCalls = 0;
   const self = {
     location: {origin:'https://turnier.test'},
     addEventListener: (type, listener) => { listeners[type] = listener; },
-    skipWaiting() {},
+    skipWaiting: () => { skipWaitingCalls++; },
     clients: {claim() {}}
   };
   const context = {
     self,
-    caches: {match},
+    caches: {
+      match,
+      open: async () => ({addAll:async () => {}})
+    },
     fetch: fetchRequest,
     URL,
     Response
   };
   vm.createContext(context);
   vm.runInContext(source, context);
-  return {context, listeners};
+  return {context, listeners, self, get skipWaitingCalls(){ return skipWaitingCalls; }};
 }
 
 test('pre-caches every required app asset', () => {
@@ -32,10 +36,19 @@ test('pre-caches every required app asset', () => {
 
   for(const asset of [
     './index.html', './manifest.json', './ui.js', './matches.js',
-    './ranking.js', './print.js', './backup.js', './icon-192.png', './icon-512.png'
+    './ranking.js', './print.js', './backup.js', './service-worker-client.js',
+    './icon-192.png', './icon-512.png'
   ]){
     assert.ok(assets.includes(asset), `${asset} should be cached for offline use`);
   }
+});
+
+test('activates the new worker without requiring or triggering a page reload', async () => {
+  const worker = loadServiceWorker();
+  let installPromise;
+  worker.listeners.install({waitUntil:promise => { installPromise = promise; }});
+  await installPromise;
+  assert.equal(worker.skipWaitingCalls, 1);
 });
 
 test('serves the cached app page for offline navigation', async () => {

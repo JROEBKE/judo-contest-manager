@@ -1,4 +1,4 @@
-const CACHE_NAME = 'judo-turnier-v2';
+const CACHE_NAME = 'judo-turnier-v3';
 const ASSETS_TO_CACHE = [
   './index.html',
   './manifest.json',
@@ -7,6 +7,7 @@ const ASSETS_TO_CACHE = [
   './ranking.js',
   './print.js',
   './backup.js',
+  './service-worker-client.js',
   './icon-192.png',
   './icon-512.png'
 ];

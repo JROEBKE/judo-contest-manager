@@ -26,6 +26,8 @@ Der Turnierstand wird lokal im Browser gespeichert. **Backup speichern** lädt e
 
 Nach einem Online-Aufruf cached der Service Worker die App-Dateien und Icons. Danach kann die App auch ohne Netzwerkverbindung geöffnet werden. Turnierdaten werden nicht im Cache, sondern im lokalen Browser-Speicher abgelegt; für eine Übertragung auf ein anderes Gerät ein Backup verwenden.
 
+Neue Service-Worker-Versionen werden im Hintergrund installiert und aktiviert. Die laufende Seite wird dabei nicht automatisch neu geladen. Die App zeigt einen Hinweis an; **Nach Kampfende neu laden** lädt den bestätigenden Tab neu.
+
 ## Tests
 
 Voraussetzung ist Node.js 18 oder neuer mit integriertem Test-Runner. Tests ohne zusätzliche Pakete ausführen:

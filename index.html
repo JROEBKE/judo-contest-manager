@@ -61,6 +61,9 @@
   .side-panel input[type=file]{display:none}
   .danger-button{border-color:#b00020!important;color:#b00020!important;background:#fff5f5!important}
   .danger-button:hover{background:#ffe6e6!important}
+  .update-notice{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px;padding:10px 12px;background:#fff8d8;border:1px solid #e2c94f;border-radius:4px}
+  .update-notice[hidden]{display:none}
+  .update-notice button{flex:0 0 auto;margin:0;padding:7px 10px}
 
   /* Print area is populated only when the user requests a printout. */
   #printArea{display:none}
@@ -106,6 +109,11 @@
 
 <!-- Temporary print target. Only this element is visible during printing. -->
 <div id="printArea"></div>
+
+<div id="updateNotice" class="update-notice" role="status" aria-live="polite" hidden>
+  <span>Neue Version verfügbar. Bitte erst nach Kampfende neu laden.</span>
+  <button id="reloadAfterFight" type="button">Nach Kampfende neu laden</button>
+</div>
 
 <div class="title-row">
   <h1>Judo Turnier Manager</h1>
@@ -154,14 +162,6 @@
 <script src="ranking.js"></script>
 <script src="print.js"></script>
 <script src="backup.js"></script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('Service Worker registered succesfully:', reg.scope))
-      .catch(err => console.log('Service Worker registry failed:', err));
-  });
-}
-</script>
+<script src="service-worker-client.js"></script>
 </body>
 </html>
