@@ -1,0 +1,70 @@
+{
+  "teams": [
+    {
+      "name": "Mannschaft A",
+      "saved": true
+    },
+    {
+      "name": "Mannschaft B",
+      "saved": true
+    },
+    {
+      "name": "Mannschaft C",
+      "saved": true
+    },
+    {
+      "name": "Mannschaft D",
+      "saved": true
+    }
+  ],
+  "matches": [
+    {
+      "a": "Mannschaft A",
+      "b": "Mannschaft B",
+      "day": 1,
+      "block": 1,
+      "mat": 1,
+      "fightsA": 4,
+      "fightsB": 1,
+      "scoreA": 40,
+      "scoreB": 10,
+      "saved": true
+    },
+    {
+      "a": "Mannschaft C",
+      "b": "Mannschaft D",
+      "day": 1,
+      "block": 1,
+      "mat": 2,
+      "fightsA": 0,
+      "fightsB": 0,
+      "scoreA": 0,
+      "scoreB": 0,
+      "saved": false
+    },
+    {
+      "a": "Mannschaft A",
+      "b": "Mannschaft C",
+      "day": 1,
+      "block": 2,
+      "mat": 1,
+      "fightsA": 0,
+      "fightsB": 0,
+      "scoreA": 0,
+      "scoreB": 0,
+      "saved": false
+    },
+    {
+      "a": "Mannschaft B",
+      "b": "Mannschaft D",
+      "day": 1,
+      "block": 2,
+      "mat": 2,
+      "fightsA": 2,
+      "fightsB": 3,
+      "scoreA": 20,
+      "scoreB": 30,
+      "saved": true
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "teams": [
+    {
+      "name": "Mannschaft A",
+      "saved": true
+    },
+    {
+      "name": "Mannschaft B",
+      "saved": true
+    },
+    {
+      "name": "Mannschaft C",
+      "saved": true
+    },
+    {
+      "name": "Mannschaft D",
+      "saved": true
+    },
+    {
+      "name": "Mannschaft E",
+      "saved": true
+    }
+  ],
+  "matches": [
+    {
+      "a": "Mannschaft A",
+      "b": "Mannschaft B",
+      "day": 1,
+      "block": 1,
+      "mat": 1,
+      "fightsA": 3,
+      "fightsB": 0,
+      "scoreA": 30,
+      "scoreB": 0,
+      "saved": true
+    },
+    {
+      "a": "Mannschaft A",
+      "b": "Mannschaft C",
+      "day": 1,
+      "block": 1,
+      "mat": 2,
+      "fightsA": 3,
+      "fightsB": 0,
+      "scoreA": 30,
+      "scoreB": 0,
+      "saved": true
+    },
+    {
+      "a": "Mannschaft B",
+      "b": "Mannschaft C",
+      "day": 1,
+      "block": 2,
+      "mat": 1,
+      "fightsA": 3,
+      "fightsB": 0,
+      "scoreA": 30,
+      "scoreB": 0,
+      "saved": true
+    },
+    {
+      "a": "Mannschaft D",
+      "b": "Mannschaft A",
+      "day": 1,
+      "block": 2,
+      "mat": 2,
+      "fightsA": 3,
+      "fightsB": 0,
+      "scoreA": 30,
+      "scoreB": 0,
+      "saved": true
+    },
+    {
+      "a": "Mannschaft E",
+      "b": "Mannschaft A",
+      "day": 2,
+      "block": 1,
+      "mat": 1,
+      "fightsA": 3,
+      "fightsB": 0,
+      "scoreA": 30,
+      "scoreB": 0,
+      "saved": true
+    },
+    {
+      "a": "Mannschaft C",
+      "b": "Mannschaft D",
+      "day": 2,
+      "block": 1,
+      "mat": 2,
+      "fightsA": 3,
+      "fightsB": 0,
+      "scoreA": 30,
+      "scoreB": 0,
+      "saved": true
+    },
+    {
+      "a": "Mannschaft C",
+      "b": "Mannschaft E",
+      "day": 2,
+      "block": 2,
+      "mat": 1,
+      "fightsA": 3,
+      "fightsB": 0,
+      "scoreA": 30,
+      "scoreB": 0,
+      "saved": true
+    },
+    {
+      "a": "Mannschaft E",
+      "b": "Mannschaft D",
+      "day": 2,
+      "block": 2,
+      "mat": 2,
+      "fightsA": 3,
+      "fightsB": 0,
+      "scoreA": 30,
+      "scoreB": 0,
+      "saved": true
+    }
+  ]
+}
