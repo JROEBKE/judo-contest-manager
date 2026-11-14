@@ -35,7 +35,7 @@ test('pre-caches every required app asset', () => {
   const assets = vm.runInContext('ASSETS_TO_CACHE', context);
 
   for(const asset of [
-    './index.html', './manifest.json', './ui.js', './matches.js',
+    './index.html', './live.html', './manifest.json', './ui.js', './live.js', './matches.js',
     './ranking.js', './print.js', './backup.js', './service-worker-client.js',
     './icon-192.png', './icon-512.png'
   ]){
@@ -60,6 +60,21 @@ test('serves the cached app page for offline navigation', async () => {
 
   listeners.fetch({
     request: {method:'GET', url:'https://turnier.test/tournament/', mode:'navigate'},
+    respondWith: promise => { responsePromise = promise; }
+  });
+
+  assert.equal(await responsePromise, cachedPage);
+});
+
+test('serves a cached live view for offline navigation with a view query', async () => {
+  const cachedPage = {fromCache:true};
+  const {listeners} = loadServiceWorker({
+    match: async request => request === 'https://turnier.test/live.html' ? cachedPage : null
+  });
+  let responsePromise;
+
+  listeners.fetch({
+    request: {method:'GET', url:'https://turnier.test/live.html?view=matches', mode:'navigate'},
     respondWith: promise => { responsePromise = promise; }
   });
 

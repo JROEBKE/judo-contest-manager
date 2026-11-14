@@ -50,7 +50,7 @@
   .legend{display:none;margin:12px 0 0 0;padding:8px 10px;background:#fff8d8;border:1px solid #e2c94f;border-radius:4px;font-size:14px}
 
   /* Fixed action panels on the right side. Flex gap keeps equal spacing between panels. */
-  .side-stack{position:fixed;right:20px;top:50px;width:175px;display:flex;flex-direction:column;gap:14px;z-index:10}
+  .side-stack{position:fixed;right:20px;top:50px;width:175px;max-height:calc(100vh - 60px);overflow-y:auto;display:flex;flex-direction:column;gap:14px;z-index:10}
   .side-panel{background:#fff;border:1px solid #ccc;border-radius:6px;padding:10px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
   .side-panel strong{display:block;margin-bottom:6px;color:#1f3f73}
   .side-panel button:not(.nav-button),.upload-label{display:block;width:100%;box-sizing:border-box;margin:6px 0;padding:7px 8px;min-height:34px;text-align:left;font:inherit;background:#f4f4f4;border:1px solid #999;border-radius:3px;color:#111;cursor:pointer}
@@ -89,6 +89,12 @@
     <button type="button" class="nav-button" aria-controls="day1" onclick="toggleSection('day1')">Wettkampftag 1</button>
     <button type="button" class="nav-button" aria-controls="day2" onclick="toggleSection('day2')">Wettkampftag 2</button>
     <button type="button" class="nav-button" aria-controls="rankingSection" onclick="toggleSection('rankingSection')">Rangliste</button>
+  </div>
+
+  <div class="side-panel live-panel">
+    <strong>Live Views</strong>
+    <button type="button" onclick="openLiveView('matches')">Begegnungen</button>
+    <button type="button" onclick="openLiveView('ranking')">Live Ranking</button>
   </div>
 
   <div class="side-panel print-panel">

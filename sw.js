@@ -1,8 +1,10 @@
-const CACHE_NAME = 'judo-turnier-v3';
+const CACHE_NAME = 'judo-turnier-v7';
 const ASSETS_TO_CACHE = [
   './index.html',
+  './live.html',
   './manifest.json',
   './ui.js',
+  './live.js',
   './matches.js',
   './ranking.js',
   './print.js',
@@ -39,13 +41,18 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then(async (cachedResponse) => {
       if(cachedResponse) return cachedResponse;
+      const requestUrl = new URL(event.request.url);
+      if(event.request.mode === 'navigate' && requestUrl.search){
+        const cachedPage = await caches.match(`${requestUrl.origin}${requestUrl.pathname}`);
+        if(cachedPage) return cachedPage;
+      }
 
       try {
         return await fetch(event.request);
       } catch(error) {
         if(event.request.mode === 'navigate'){
-          const cachedPage = await caches.match('./index.html');
-          if(cachedPage) return cachedPage;
+          const cachedIndex = await caches.match('./index.html');
+          if(cachedIndex) return cachedIndex;
         }
         return new Response('Die angeforderte Ressource ist offline nicht verfügbar.', {
           status:503,

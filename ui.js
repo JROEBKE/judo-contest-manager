@@ -136,6 +136,15 @@ function updateMatCount(value){
   save();
 }
 
+/** Opens a live monitor view in a separate tab. */
+function openLiveView(view){
+  if(view !== 'matches' && view !== 'ranking'){
+    alert('Diese Live-Ansicht ist ungültig.');
+    return;
+  }
+  window.open(`./live.html?view=${view}`, '_blank', 'noopener,noreferrer');
+}
+
 /** Toggles one main section and closes the other main sections. */
 function toggleSection(id){
   const sectionIds = ['teamsSection','day1','day2','rankingSection'];
