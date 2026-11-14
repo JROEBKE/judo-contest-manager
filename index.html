@@ -13,7 +13,6 @@
 
   /* Highlight the main title and all chapter headings for better usability during a live tournament. */
   h1{margin-top:0;font-size:30px;letter-spacing:.2px}
-  h2{margin:0 0 16px 0;padding:10px 12px;border-left:6px solid #2f5597;background:#eef3fb;border-radius:4px;font-size:22px;color:#1f3f73}
   h3{margin-top:22px;font-size:18px;color:#333}
 
   /* Shared table and form styling. */
@@ -24,11 +23,11 @@
   input[type=number]{width:58px}
   button,select{margin:4px;padding:5px 8px}
 
-  /* Major chapter separator. */
+  /* Collapsible major sections. */
   .section-line{border-top:3px solid #222;margin:30px 0 0 0;padding-top:18px;background:#fff;border-radius:4px}
+  .section-line>summary{margin:0 0 16px 0;padding:10px 12px;border-left:6px solid #2f5597;background:#eef3fb;border-radius:4px;font-size:22px;color:#1f3f73;cursor:pointer}
 
   /* Internal match blocks are visualized by a stronger row border, but the block number is not displayed. */
-  .day-block{margin-bottom:28px;padding-bottom:14px;border-bottom:0}
   .block-row-start td{border-top:3px solid #777}
 
   /* Result and tie-break highlighting. */
@@ -69,10 +68,10 @@
 <div class="side-stack">
   <div class="side-panel nav">
     <strong>Navigation</strong>
-    <a onclick="scrollToId('teamsSection')">Mannschaften</a>
-    <a onclick="scrollToId('day1')">Wettkampftag 1</a>
-    <a onclick="scrollToId('day2')">Wettkampftag 2</a>
-    <a onclick="scrollToId('rankingSection')">Rangliste</a>
+    <a onclick="toggleSection('teamsSection')">Mannschaften</a>
+    <a onclick="toggleSection('day1')">Wettkampftag 1</a>
+    <a onclick="toggleSection('day2')">Wettkampftag 2</a>
+    <a onclick="toggleSection('rankingSection')">Rangliste</a>
   </div>
 
   <div class="side-panel print-panel">
@@ -87,7 +86,7 @@
     <button onclick="saveFile()">Backup speichern</button>
     <label class="upload-label" for="uploadFile">Datei hochladen</label>
     <input id="uploadFile" type="file" accept="application/json" onchange="loadFile(event)">
-    <button class="danger-button" onclick="resetTournament()">Daten löschen / Reset</button>
+    <button class="danger-button" onclick="resetTournament()">Daten löschen</button>
   </div>
 </div>
 
@@ -96,8 +95,8 @@
 
 <h1>Judo Turnier Manager</h1>
 
-<section id="teamsSection" class="section-line">
-  <h2>Mannschaften</h2>
+<details id="teamsSection" class="section-line" open>
+  <summary>Mannschaften</summary>
   <label for="teamCount">Anzahl Mannschaften:</label>
   <select id="teamCount">
     <option value="2">2</option><option value="3">3</option><option value="4">4</option>
@@ -107,15 +106,20 @@
   <button onclick="initTeams()">anlegen</button>
   <div id="teamTable"></div>
   <button onclick="generateMatches()">Begegnungen erstellen</button>
-</section>
+</details>
 
-<section id="matchesSection" class="section-line">
-  <h2>Begegnungen</h2>
-  <div id="matches"></div>
-</section>
+<details id="day1" class="section-line">
+  <summary>Wettkampftag 1</summary>
+  <div id="matchesDay1"></div>
+</details>
 
-<section id="rankingSection" class="section-line">
-  <h2>Rangliste</h2>
+<details id="day2" class="section-line">
+  <summary>Wettkampftag 2</summary>
+  <div id="matchesDay2"></div>
+</details>
+
+<details id="rankingSection" class="section-line">
+  <summary>Rangliste</summary>
   <table id="rankingTable">
     <thead>
       <tr>
@@ -126,7 +130,7 @@
     <tbody></tbody>
   </table>
   <div id="directLegend" class="legend">🟡 Direkter Vergleich hat die Reihenfolge innerhalb einer punktgleichen Gruppe entschieden.</div>
-</section>
+</details>
 
 <script src="ui.js"></script>
 <script src="matches.js"></script>

@@ -14,6 +14,19 @@ function scrollToId(id){
   if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
+/** Toggles one main section and closes the other main sections. */
+function toggleSection(id){
+  const sectionIds = ['teamsSection','day1','day2','rankingSection'];
+  const target = document.getElementById(id);
+  if(!target || !sectionIds.includes(id)) return;
+
+  const shouldOpen = !target.open;
+  sectionIds.forEach(sectionId => {
+    document.getElementById(sectionId).open = sectionId === id && shouldOpen;
+  });
+  scrollToId(id);
+}
+
 /**
  * Resets the tournament to the initial empty state.
  * This removes the persisted localStorage entry used by this page and re-renders all sections.
@@ -24,6 +37,10 @@ function resetTournament(){
 
   localStorage.removeItem('turnier');
   data = {version:1, teams:[], matches:[]};
+  document.getElementById('teamsSection').open = true;
+  document.getElementById('day1').open = false;
+  document.getElementById('day2').open = false;
+  document.getElementById('rankingSection').open = false;
 
   const upload = document.getElementById('uploadFile');
   if(upload) upload.value = '';

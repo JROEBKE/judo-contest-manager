@@ -222,22 +222,18 @@ function generateMatches(){
   }
 
   renderMatches();
+  document.getElementById('teamsSection').open = false;
+  document.getElementById('day1').open = true;
   save();
 }
 
 /** Renders matches grouped by day. Internal block numbers only affect row separators. */
 function renderMatches(){
-  const c = document.getElementById('matches');
-  c.innerHTML = '';
-
   [1,2].forEach(day => {
+    const c = document.getElementById('matchesDay' + day);
+    c.innerHTML = '';
     const list = data.matches.filter(m => m.day === day);
     if(!list.length) return;
-
-    const block = document.createElement('div');
-    block.className = 'day-block';
-    block.id = 'day' + day;
-    block.innerHTML = '<h3>Wettkampftag ' + day + '</h3>';
 
     const table = document.createElement('table');
     table.innerHTML = '<thead><tr><th>Matte</th><th>Mannschaft 1</th><th>Mannschaft 2</th><th>Kampfergebnis</th><th>Unterbewertung</th><th>Aktion</th></tr></thead><tbody></tbody>';
@@ -268,8 +264,7 @@ function renderMatches(){
       tbody.appendChild(tr);
     });
 
-    block.appendChild(table);
-    c.appendChild(block);
+    c.appendChild(table);
   });
 
   calculateRanking();

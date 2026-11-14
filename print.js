@@ -15,7 +15,7 @@ function printHtml(title, html){
   const printArea = document.getElementById('printArea');
   printArea.innerHTML = `<h1>${title}</h1>${html}`;
   document.body.classList.add('printing');
-  setTimeout(() => window.print(), 50);
+  window.print();
 }
 
 /** Cleans up the temporary print area after printing. */
@@ -27,8 +27,9 @@ window.onafterprint = () => {
 /** Prints one selected tournament day. */
 function printDay(day){
   const dayEl = document.getElementById('day' + day);
-  if(!dayEl){ alert('Für diesen Wettkampftag gibt es noch keine Begegnungen.'); return; }
-  printHtml('Wettkampftag ' + day, stripActionColumnForPrint(dayEl.innerHTML));
+  const table = dayEl && dayEl.querySelector('table');
+  if(!table){ alert('Für diesen Wettkampftag gibt es noch keine Begegnungen.'); return; }
+  printHtml('Wettkampftag ' + day, stripActionColumnForPrint(table.outerHTML));
 }
 
 /** Prints only the ranking section. */
